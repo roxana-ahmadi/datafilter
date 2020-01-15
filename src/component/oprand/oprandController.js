@@ -1,32 +1,38 @@
-import React from 'react'
-import Parse from 'parse'
-import { withEmitter, withState, withHandlers, withLifecycle, pipe } from '../../util'
+import Parse from 'parse';
+import {
+  Record,
+} from 'immutable';
+import {
+  withEmitter, withState, withHandlers, withLifecycle, pipe,
+} from '../../util';
 
 
-const ClouseQuery = Parse.Object.extend("ClouseQuery")
+const ClouseQuery = Parse.Object.extend('ClouseQuery');
 
-const addClouse = ({ oprandData, setOprandData }) => () => {
-  const query = new Parse.Query(ClouseQuery)
-  oprandData.child.push(query)
-  setOprandData({ ...oprandData })
-}
+const init = () => Record({ op: 'and', childs: [] });
 
-const deleteClouse = ({ oprandData, setOprandData }) => (index) => {
-  console.log('on delte', oprandData.child, index)
-  oprandData.child.splice(index, 1)
-  setOprandData({ ...oprandData })
-  console.log('after set data', oprandData.child)
+const addClouse = ({ setData }) => () => {
+  const query = new Parse.Query(ClouseQuery);
+  setData((d) => d.set('childs', d.childs.concat(query)));
+};
 
-}
+const deleteClouse = ({ setData }) => (index) => {
+  setData((d) => d.set('childs', d.childs.filter((value, i) => i !== index)));
+};
+
+const changeOprand = ({ setData }) => (oprand) => {
+  setData((d) => d.set('op', oprand));
+};
 
 const oprandController = pipe(
-  withState(({ op: 'and', child: [1, 2, 3, 4, 5, 6] }), 'oprandData', 'setOprandData'),
+  withState(init),
   withEmitter(),
   withHandlers({
     addClouse,
     deleteClouse,
+    changeOprand,
   }),
   withLifecycle({}),
-)
+);
 
-export default oprandController
+export default oprandController;
