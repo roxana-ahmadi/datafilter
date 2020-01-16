@@ -7,16 +7,19 @@ import {
 } from '../../util';
 
 
-const setConstraint = ({ setData }) => (constraint) => {
-  setData((d) => d.set('constraint', constraint));
+const setConstraint = ({ setData }) => (selectedConstraint) => {
+  setData((d) => d.set('selectedConstraint', selectedConstraint));
 };
 
 const setFieldValue = ({ data, setData }) => (fieldValue) => {
   data.query._where = {};
-  setData((d) => d.set('fieldValue', fieldValue));
-  switch (data.constraint) {
+  // eslint-disable-next-line default-case
+  switch (data.selectedConstraint) {
     case 'EqualTo':
-      setData((d) => d.set('query', data.query.equalTo(data.fieldName, fieldValue)));
+      setData((d) => d.merge({
+        fieldValue,
+        query: data.query.equalTo(data.fieldName, fieldValue),
+      }));
       break;
     case 'NotEqualTo':
       setData((d) => d.merge({
@@ -68,24 +71,41 @@ const setFieldValue = ({ data, setData }) => (fieldValue) => {
       }));
       break;
     default:
-      console.log(data.constraint);
+      setData((d) => d.set('query', data.query.equalTo(data.fieldName, fieldValue)));
   }
 };
 
 const setFieldName = ({ setData }) => (fieldName) => {
+  let constraintType;
+  switch (fieldName) {
+    case 'id':
+      constraintType = 'number';
+      break;
+    case 'name':
+      constraintType = 'string';
+      break;
+    case 'date':
+      constraintType = 'date';
+      break;
+    case 'boolean':
+      constraintType = 'boolean';
+      break;
+    default:
+      constraintType = 'default';
+  }
   setData((d) => d.merge({
-    fieldValue: null,
+    fieldValue: '',
     fieldName,
-    constraintType: fieldName,
+    constraintType,
   }));
 };
 
 const init = (props) => Record({
-  fieldValue: null,
-  fieldName: null,
+  fieldValue: undefined,
+  fieldName: undefined,
   constraintType: 'default',
   query: props.query,
-  constraint: 'EqualTo',
+  selectedConstraint: 'EqualTo',
 });
 
 const clouseController = pipe(

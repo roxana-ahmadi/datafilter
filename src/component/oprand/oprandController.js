@@ -3,7 +3,7 @@ import {
   Record,
 } from 'immutable';
 import {
-  withEmitter, withState, withHandlers, withLifecycle, pipe,
+  withState, withHandlers, pipe,
 } from '../../util';
 
 
@@ -26,13 +26,11 @@ const changeOprand = ({ setData }) => (oprand) => {
 
 const oprandController = pipe(
   withState(init),
-  withEmitter(),
   withHandlers({
     addClouse,
     deleteClouse,
     changeOprand,
   }),
-  withLifecycle({}),
 );
 
 export default oprandController;
