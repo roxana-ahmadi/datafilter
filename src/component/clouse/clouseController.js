@@ -76,36 +76,18 @@ const setFieldValue = ({ data, setData }) => (fieldValue) => {
 };
 
 const setFieldName = ({ setData }) => (fieldName) => {
-  let constraintType;
-  switch (fieldName) {
-    case 'id':
-      constraintType = 'number';
-      break;
-    case 'name':
-      constraintType = 'string';
-      break;
-    case 'date':
-      constraintType = 'date';
-      break;
-    case 'boolean':
-      constraintType = 'boolean';
-      break;
-    default:
-      constraintType = 'default';
-  }
   setData((d) => d.merge({
     fieldValue: '',
     fieldName,
-    constraintType,
   }));
 };
 
 const init = (props) => Record({
   fieldValue: undefined,
-  fieldName: undefined,
-  constraintType: 'default',
+  fieldName: 'name',
   query: props.query,
   selectedConstraint: 'EqualTo',
+
 });
 
 const clouseController = pipe(

@@ -15,14 +15,13 @@ const OprandView = (props) => {
   const {
     addClouse, data, deleteClouse, changeOprand,
   } = oprandController();
-  const { dataTypeOptionsView, constraintList } = props;
-  const OprandUI = () => (
+  const { fields, constraints } = props;
+  const OprandBox = () => (
     <InputGroup compact>
       <Select defaultValue={data.op} onChange={(value) => changeOprand(value)}>
         <Option value="and">And</Option>
         <Option value="or">Or</Option>
       </Select>
-
       <Button icon="plus" onClick={() => addClouse()} />
       <Button>
         <Icon component={filterIcon} />
@@ -31,7 +30,7 @@ const OprandView = (props) => {
   );
   return (
     <Tree>
-      <TreeNode title={<OprandUI addClouse={addClouse} />}>
+      <TreeNode title={<OprandBox addClouse={addClouse} />}>
         {
             data.childs.map((item, index) => (
               <TreeNode
@@ -42,8 +41,8 @@ const OprandView = (props) => {
                     deleteClouse={deleteClouse}
                     queryIndex={index}
                     query={item}
-                    dataTypeOptionsView={dataTypeOptionsView}
-                    constraintList={constraintList}
+                    fields={fields}
+                    constraints={constraints}
                   />
                 )}
               />
@@ -55,8 +54,10 @@ const OprandView = (props) => {
 };
 
 OprandView.propTypes = {
-  dataTypeOptionsView: PropTypes.array.isRequired,
-  constraintList: PropTypes.array.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  fields: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  constraints: PropTypes.object.isRequired,
 };
 
 export default OprandView;

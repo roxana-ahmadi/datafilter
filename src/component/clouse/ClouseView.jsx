@@ -5,17 +5,48 @@ import {
 } from 'antd';
 import clouseController from './clouseController';
 
-
 const InputGroup = Input.Group;
+const { Option } = Select;
+
+const generateFieldOptions = (fields) => {
+  const fieldNames = Array.from(fields.keys());
+  return fieldNames.map((item, index) => (
+    <Option
+      key={index}
+      value={item}
+    >
+      {item.toUpperCase()}
+    </Option>
+  ));
+};
+
+const generateConstraintOptions = (constraints, fields, fieldName) => {
+  const fieldType = fields.get(fieldName);
+  const constrains = Array.from(constraints.get(fieldType));
+  return constrains.map((item, index) => (
+    <Option
+      key={index}
+      value={item}
+    >
+      {item.toUpperCase()}
+    </Option>
+  ));
+};
 
 const ClouseView = (props) => {
   const {
-    deleteClouse, queryIndex, dataTypeOptionsView, constraintList,
+    deleteClouse,
+    queryIndex,
+    fields,
+    constraints,
   } = props;
   const {
-    setFieldName, data, setConstraint, setFieldValue,
+    setFieldName,
+    data,
+    setConstraint,
+    setFieldValue,
   } = clouseController(props);
-  const setFieldInput = (fieldType) => {
+  const generateInputByType = (fieldType) => {
     switch (fieldType) {
       case 'string':
         return (
@@ -26,7 +57,7 @@ const ClouseView = (props) => {
             onChange={(e) => setFieldValue(e.target.value)}
           />
         );
-      case 'date':
+      case 'time':
         return (
           <DatePicker
             style={{ width: '10vw' }}
@@ -50,26 +81,28 @@ const ClouseView = (props) => {
         return <Input style={{ width: '10vw' }} disabled />;
     }
   };
+
+
   return (
     <InputGroup compact>
+
       <span>
+
         <Select
           defaultValue="FieldName"
           onChange={(value) => setFieldName(value)}
           style={{ width: '10vw' }}
         >
-          {dataTypeOptionsView}
+          {generateFieldOptions(fields)}
         </Select>
-
         <Select
           defaultValue="EqualTo"
           onChange={(value) => setConstraint(value)}
           style={{ width: '10vw' }}
         >
-          {constraintList[data.constraintType]}
+          {generateConstraintOptions(constraints, fields, data.fieldName)}
         </Select>
-
-        {setFieldInput(data.constraintType)}
+        {generateInputByType(fields.get(data.fieldName))}
         <Button icon="close" onClick={() => deleteClouse(queryIndex)} />
       </span>
     </InputGroup>
@@ -80,8 +113,11 @@ const ClouseView = (props) => {
 ClouseView.propTypes = {
   deleteClouse: PropTypes.func.isRequired,
   queryIndex: PropTypes.number.isRequired,
-  dataTypeOptionsView: PropTypes.array.isRequired,
-  constraintList: PropTypes.array.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  fields: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  constraints: PropTypes.object.isRequired,
+
 };
 
 export default ClouseView;
