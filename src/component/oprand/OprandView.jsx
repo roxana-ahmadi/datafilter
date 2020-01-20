@@ -13,8 +13,12 @@ const { TreeNode } = Tree;
 
 const OprandView = (props) => {
   const {
-    addClouse, data, deleteClouse, changeOprand,
-  } = oprandController();
+    addClouse,
+    deleteClouse,
+    changeOprand,
+    addOprand,
+    data,
+  } = oprandController(props);
   const { fields, constraints } = props;
   const OprandBox = () => (
     <InputGroup compact>
@@ -23,30 +27,50 @@ const OprandView = (props) => {
         <Option value="or">Or</Option>
       </Select>
       <Button icon="plus" onClick={() => addClouse()} />
-      <Button>
+      <Button onClick={() => addOprand()}>
         <Icon component={filterIcon} />
       </Button>
     </InputGroup>
   );
+
   return (
     <Tree>
       <TreeNode title={<OprandBox addClouse={addClouse} />}>
         {
-            data.childs.map((item, index) => (
-              <TreeNode
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                title={(
-                  <ClouseView
-                    deleteClouse={deleteClouse}
-                    queryIndex={index}
-                    query={item}
-                    fields={fields}
-                    constraints={constraints}
+            data.childs.map((item, index) => {
+              if (item.op && (item.childs.length >= 0)) {
+                return (
+                  <TreeNode
+                    key={index}
+                    title={(
+                      <OprandView
+                        filterData={item}
+                        constraints={props.constraints}
+                        fields={props.fields}
+                      />
+)}
                   />
-                )}
-              />
-            ))
+                );
+              }
+
+              if (item) {
+                return (
+                  <TreeNode
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    title={(
+                      <ClouseView
+                        deleteClouse={deleteClouse}
+                        queryIndex={index}
+                        query={item}
+                        fields={fields}
+                        constraints={constraints}
+                      />
+                    )}
+                  />
+                );
+              }
+            })
           }
       </TreeNode>
     </Tree>

@@ -46,6 +46,8 @@ const ClouseView = (props) => {
     setConstraint,
     setFieldValue,
   } = clouseController(props);
+  console.log('clouseview');
+
   const generateInputByType = (fieldType) => {
     switch (fieldType) {
       case 'string':

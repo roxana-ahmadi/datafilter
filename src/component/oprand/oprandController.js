@@ -9,20 +9,24 @@ import {
 
 const ClouseQuery = Parse.Object.extend('ClouseQuery');
 
-const init = () => Record({ op: 'and', childs: [10, 20, 30, 40, 50, 60] });
+
+const init = (props) => props.filterData;
 
 const addClouse = ({ setData }) => () => {
   const query = new Parse.Query(ClouseQuery);
   setData((d) => d.set('childs', d.childs.concat(query)));
 };
 
-const deleteClouse = ({ setData, data }) => (index) => {
-  console.log(index, data.childs.filter((value, i) => i !== index));
+const deleteClouse = ({ setData }) => (index) => {
   setData((d) => d.set('childs', d.childs.filter((value, i) => i !== index)));
 };
 
 const changeOprand = ({ setData }) => (oprand) => {
   setData((d) => d.set('op', oprand));
+};
+
+const addOprand = ({ setData }) => () => {
+  setData((d) => d.set('childs', d.childs.concat(Record({ op: 'and', childs: [] })())));
 };
 
 const oprandController = pipe(
@@ -31,6 +35,7 @@ const oprandController = pipe(
     addClouse,
     deleteClouse,
     changeOprand,
+    addOprand,
   }),
 );
 
