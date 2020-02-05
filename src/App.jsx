@@ -1,6 +1,7 @@
 import React from 'react';
+import Parse from 'parse';
 import { Map, Record } from 'immutable';
-import DataFilterView from './component/tree/DataFilterView';
+import OprandView from './components/oprand/OprandView';
 import './App.css';
 
 const fields = Map({
@@ -60,15 +61,21 @@ const constraints = Map({
 
 });
 
-const filterData = Record({ op: 'and', childs: [] })();
+const ClouseQuery = Parse.Object.extend('ClouseQuery');
+const mainQuery = new Parse.Query(ClouseQuery);
+
+
+const filterData = Record({ op: 'and', childs: [mainQuery, mainQuery], mainQuery })();
+
 
 function App() {
   return (
-    <DataFilterView
+    <OprandView
       filterData={filterData}
       constraints={constraints}
       fields={fields}
     />
+
   );
 }
 

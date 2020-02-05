@@ -6,7 +6,7 @@ import OprandView from '../oprand/OprandView';
 
 const DataFilterView = (props) => {
   const { filterData, constraints, fields } = props;
-  const filtergenerator = () => {
+  const dataFilter = () => {
     if (filterData.op) {
       return (
         <OprandView
@@ -17,7 +17,7 @@ const DataFilterView = (props) => {
       );
     }
   };
-  return (filtergenerator());
+  return (dataFilter());
 };
 
 DataFilterView.propTypes = {

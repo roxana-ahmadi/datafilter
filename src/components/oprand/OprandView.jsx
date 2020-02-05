@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -14,13 +15,21 @@ const { TreeNode } = Tree;
 const OprandView = (props) => {
   const {
     addClouse,
-    deleteClouse,
+    deleteChild,
     changeOprand,
     addOprand,
     data,
+    recursiveFunc,
   } = oprandController(props);
-  const { fields, constraints } = props;
-  const OprandBox = () => (
+  const {
+    fields,
+    constraints,
+    operandIndex,
+    deleteOprand,
+
+  } = (props);
+
+  const OprandNode = () => (
     <InputGroup compact>
       <Select defaultValue={data.op} onChange={(value) => changeOprand(value)}>
         <Option value="and">And</Option>
@@ -30,14 +39,19 @@ const OprandView = (props) => {
       <Button onClick={() => addOprand()}>
         <Icon component={filterIcon} />
       </Button>
+      <Button icon="close" onClick={() => deleteOprand(operandIndex)} />
+      <Button onClick={() => recursiveFunc(data)}>build main query</Button>
+
+
     </InputGroup>
   );
 
   return (
     <Tree>
-      <TreeNode title={<OprandBox addClouse={addClouse} />}>
+      <TreeNode title={<OprandNode />}>
         {
             data.childs.map((item, index) => {
+              // console.log('itrated data', item);
               if (item.op && (item.childs.length >= 0)) {
                 return (
                   <TreeNode
@@ -45,10 +59,12 @@ const OprandView = (props) => {
                     title={(
                       <OprandView
                         filterData={item}
+                        deleteOprand={deleteChild}
                         constraints={props.constraints}
                         fields={props.fields}
+                        operandIndex={index}
                       />
-)}
+                    )}
                   />
                 );
               }
@@ -60,11 +76,12 @@ const OprandView = (props) => {
                     key={index}
                     title={(
                       <ClouseView
-                        deleteClouse={deleteClouse}
+                        deleteClouse={deleteChild}
                         queryIndex={index}
                         query={item}
                         fields={fields}
                         constraints={constraints}
+
                       />
                     )}
                   />
@@ -82,6 +99,11 @@ OprandView.propTypes = {
   fields: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   constraints: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  operandIndex: PropTypes.object.isRequired,
+  deleteOprand: PropTypes.func.isRequired,
+
+
 };
 
 export default OprandView;

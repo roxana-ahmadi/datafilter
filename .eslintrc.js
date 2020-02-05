@@ -4,7 +4,6 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'react-app',
     'plugin:react/recommended',
     'airbnb',
   ],

@@ -13,6 +13,7 @@ const setConstraint = ({ setData }) => (selectedConstraint) => {
 
 const setFieldValue = ({ data, setData }) => (fieldValue) => {
   data.query._where = {};
+
   // eslint-disable-next-line default-case
   switch (data.selectedConstraint) {
     case 'EqualTo':
@@ -75,18 +76,21 @@ const setFieldValue = ({ data, setData }) => (fieldValue) => {
   }
 };
 
-const setFieldName = ({ setData }) => (fieldName) => {
+const setFieldName = ({ setData, data }) => (fieldName) => {
   setData((d) => d.merge({
     fieldValue: '',
     fieldName,
   }));
+  // console.log('quet', data.query);
 };
 
 const init = (props) => Record({
-  fieldValue: undefined,
   fieldName: 'name',
+  fieldValue: '',
   query: props.query,
   selectedConstraint: 'EqualTo',
+  counter: props.counter,
+  jsonq: props.query.toJSON(),
 
 });
 
