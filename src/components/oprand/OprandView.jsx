@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Icon, Button, Input, Select, Tree,
+  Icon, Button, Input, Select, Tree, Card,
 } from 'antd';
 import oprandController from './oprandController';
 import ClouseView from '../clouse/ClouseView';
@@ -19,14 +19,13 @@ const OprandView = (props) => {
     changeOprand,
     addOprand,
     data,
-    recursiveFunc,
   } = oprandController(props);
   const {
     fields,
     constraints,
     operandIndex,
     deleteOprand,
-
+    makeMainQuery,
   } = (props);
 
   const OprandNode = () => (
@@ -40,24 +39,23 @@ const OprandView = (props) => {
         <Icon component={filterIcon} />
       </Button>
       <Button icon="close" onClick={() => deleteOprand(operandIndex)} />
-      <Button onClick={() => recursiveFunc(data)}>build main query</Button>
-
-
     </InputGroup>
   );
 
   return (
-    <Tree>
-      <TreeNode title={<OprandNode />}>
-        {
+    <>
+
+      <Tree>
+        <TreeNode title={<OprandNode />}>
+          {
             data.childs.map((item, index) => {
-              // console.log('itrated data', item);
               if (item.op && (item.childs.length >= 0)) {
                 return (
                   <TreeNode
                     key={index}
                     title={(
                       <OprandView
+                        makeMainQuery={makeMainQuery}
                         filterData={item}
                         deleteOprand={deleteChild}
                         constraints={props.constraints}
@@ -68,7 +66,6 @@ const OprandView = (props) => {
                   />
                 );
               }
-
               if (item) {
                 return (
                   <TreeNode
@@ -81,7 +78,6 @@ const OprandView = (props) => {
                         query={item}
                         fields={fields}
                         constraints={constraints}
-
                       />
                     )}
                   />
@@ -89,8 +85,22 @@ const OprandView = (props) => {
               }
             })
           }
-      </TreeNode>
-    </Tree>
+        </TreeNode>
+      </Tree>
+      <div style={{ marginTop: '100px' }} />
+      {data.searchResults.map((item, index) => {
+        const jsonResult = item.toJSON();
+        return (
+          <Card
+            key={index}
+            title={jsonResult.name}
+            style={{ width: 300, marginTop: 16 }}
+
+          />
+        );
+      })}
+
+    </>
   );
 };
 
@@ -102,6 +112,7 @@ OprandView.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   operandIndex: PropTypes.object.isRequired,
   deleteOprand: PropTypes.func.isRequired,
+  makeMainQuery: PropTypes.func.isRequired,
 
 
 };

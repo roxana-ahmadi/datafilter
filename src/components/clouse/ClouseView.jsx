@@ -54,7 +54,7 @@ const ClouseView = (props) => {
       case 'string':
         return (
           <Input
-            value={jSonQuery.where[data.fieldName]}
+            value={data.fieldValue}
             style={{ width: '20vw' }}
             placeholder="String"
             onChange={(e) => setFieldValue(e.target.value)}
@@ -70,7 +70,7 @@ const ClouseView = (props) => {
       case 'number':
         return (
           <Input
-            value={jSonQuery.where[data.fieldName]}
+            value={data.fieldValue}
             style={{ width: '10vw' }}
             placeholder="Number"
             type="number"
@@ -105,7 +105,7 @@ const ClouseView = (props) => {
         </Select>
         {generateInputByType((fields.get(Object.keys(jSonQuery.where)[0] || data.fieldName)))}
         <Button icon="close" onClick={() => deleteClouse(queryIndex)} />
-        <Button onClick={() => console.log('jsonqery', jSonQuery.where[data.fieldName])}>show json query</Button>
+        {/* <Button onClick={() => console.log('jsonqery', jSonQuery.where[data.fieldName])}>show json query</Button> */}
       </span>
     </InputGroup>
   );

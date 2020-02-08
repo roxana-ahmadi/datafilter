@@ -76,12 +76,11 @@ const setFieldValue = ({ data, setData }) => (fieldValue) => {
   }
 };
 
-const setFieldName = ({ setData, data }) => (fieldName) => {
+const setFieldName = ({ setData }) => (fieldName) => {
   setData((d) => d.merge({
     fieldValue: '',
     fieldName,
   }));
-  // console.log('quet', data.query);
 };
 
 const init = (props) => Record({
